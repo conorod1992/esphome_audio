@@ -1,5 +1,6 @@
 import esphome.config_validation as cv
 import esphome.codegen as cg
+import inspect
 
 from esphome import pins
 from esphome.const import CONF_CHANNEL, CONF_ID, CONF_MODEL, CONF_NUMBER
@@ -117,4 +118,12 @@ async def to_code(config):
         # cg.add(var.set_pdm(config[CONF_PDM]))
         await register_i2s_reader(var, config)
 
-    await microphone.register_microphone(var, config)
+    audio_device = {"max_channels": 1}
+    if "audio_device" in inspect.signature(microphone.register_microphone).parameters:
+        await microphone.register_microphone(
+            var,
+            config,
+            audio_device=audio_device,
+        )
+    else:
+        await microphone.register_microphone(var, config)
