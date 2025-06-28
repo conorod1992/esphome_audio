@@ -45,3 +45,4 @@ async def to_code(config):
         )
     else:
         await microphone.register_microphone(var, config)
+

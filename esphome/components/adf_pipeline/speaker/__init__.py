@@ -43,3 +43,4 @@ async def to_code(config):
         )
     else:
         await speaker.register_speaker(var, config)
+
