@@ -35,4 +35,12 @@ async def to_code(config):
     cg.add(var.set_gain_log2(config[CONF_GAIN_LOG_2]))
     await cg.register_component(var, config)
     await setup_pipeline_controller(var, config)
-    await microphone.register_microphone(var, config)
+    audio_device = {"max_channels": 2}
+    try:
+        await microphone.register_microphone(
+            var,
+            config,
+            audio_device=audio_device,
+        )
+    except TypeError:
+        await microphone.register_microphone(var, config)

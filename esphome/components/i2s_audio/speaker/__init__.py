@@ -87,7 +87,15 @@ CONFIG_SCHEMA = cv.All(
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    await speaker.register_speaker(var, config)
+    audio_device = {"max_channels": 2}
+    try:
+        await speaker.register_speaker(
+            var,
+            config,
+            audio_device=audio_device,
+        )
+    except TypeError:
+        await speaker.register_speaker(var, config)
 
     await cg.register_parented(var, config[CONF_I2S_AUDIO_ID])
 

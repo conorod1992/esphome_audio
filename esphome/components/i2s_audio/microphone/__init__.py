@@ -117,4 +117,12 @@ async def to_code(config):
         # cg.add(var.set_pdm(config[CONF_PDM]))
         await register_i2s_reader(var, config)
 
-    await microphone.register_microphone(var, config)
+    audio_device = {"max_channels": 2}
+    try:
+        await microphone.register_microphone(
+            var,
+            config,
+            audio_device=audio_device,
+        )
+    except TypeError:
+        await microphone.register_microphone(var, config)
