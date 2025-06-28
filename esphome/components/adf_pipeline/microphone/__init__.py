@@ -3,6 +3,7 @@
 import esphome.codegen as cg
 from esphome.components import microphone
 import esphome.config_validation as cv
+import inspect
 from esphome.const import CONF_ID
 
 from .. import (
@@ -35,4 +36,12 @@ async def to_code(config):
     cg.add(var.set_gain_log2(config[CONF_GAIN_LOG_2]))
     await cg.register_component(var, config)
     await setup_pipeline_controller(var, config)
-    await microphone.register_microphone(var, config)
+    audio_device = {"max_channels": 1}
+    if "audio_device" in inspect.signature(microphone.register_microphone).parameters:
+        await microphone.register_microphone(
+            var,
+            config,
+            audio_device=audio_device,
+        )
+    else:
+        await microphone.register_microphone(var, config)

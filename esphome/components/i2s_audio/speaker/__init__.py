@@ -1,5 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
+import inspect
 from esphome import pins
 from esphome.const import CONF_ID, CONF_MODE, CONF_MODEL
 from esphome.components import esp32, speaker
@@ -87,7 +88,15 @@ CONFIG_SCHEMA = cv.All(
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    await speaker.register_speaker(var, config)
+    audio_device = {"max_channels": 2 if config[CONF_MODE] == "stereo" else 1}
+    if "audio_device" in inspect.signature(speaker.register_speaker).parameters:
+        await speaker.register_speaker(
+            var,
+            config,
+            audio_device=audio_device,
+        )
+    else:
+        await speaker.register_speaker(var, config)
 
     await cg.register_parented(var, config[CONF_I2S_AUDIO_ID])
 

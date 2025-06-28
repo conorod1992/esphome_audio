@@ -3,6 +3,7 @@
 import esphome.codegen as cg
 from esphome.components import speaker
 import esphome.config_validation as cv
+import inspect
 from esphome.const import CONF_ID
 
 from .. import (
@@ -33,4 +34,12 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await setup_pipeline_controller(var, config)
-    await speaker.register_speaker(var, config)
+    audio_device = {"max_channels": 2}
+    if "audio_device" in inspect.signature(speaker.register_speaker).parameters:
+        await speaker.register_speaker(
+            var,
+            config,
+            audio_device=audio_device,
+        )
+    else:
+        await speaker.register_speaker(var, config)
