@@ -37,6 +37,11 @@ async def to_code(config):
     await setup_pipeline_controller(var, config)
     audio_device = {"max_channels": 2}
     try:
+        await microphone.register_microphone(
+            var,
+            config,
+            audio_device=audio_device,
+        )
         await microphone.register_microphone(var, config, audio_device=audio_device)
     except TypeError:
         await microphone.register_microphone(var, config)

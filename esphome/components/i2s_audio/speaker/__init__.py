@@ -89,6 +89,11 @@ async def to_code(config):
     await cg.register_component(var, config)
     audio_device = {"max_channels": 2}
     try:
+        await speaker.register_speaker(
+            var,
+            config,
+            audio_device=audio_device,
+        )
         await speaker.register_speaker(var, config, audio_device=audio_device)
     except TypeError:
         await speaker.register_speaker(var, config)
