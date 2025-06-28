@@ -40,5 +40,6 @@ async def to_code(config):
             config,
             audio_device=audio_device,
         )
+        await speaker.register_speaker(var, config, audio_device=audio_device)
     except TypeError:
         await speaker.register_speaker(var, config)
